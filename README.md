@@ -1,3 +1,8 @@
 # SeeayaUI
 
-A description of this package.
+A collection of useful reusable SwiftUI components.
+
+Currently contains the following components:
+
+- `ToolbarTabButton`
+- `ValidatingTextField`
