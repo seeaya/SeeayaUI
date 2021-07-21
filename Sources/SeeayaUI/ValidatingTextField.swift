@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#if os(macOS)
 @available(macOS 11.0, *)
 public struct ValidatingTextField<Value: Equatable>: View {
 	@Binding var value: Value
@@ -67,6 +68,7 @@ public struct ValidatingTextField<Value: Equatable>: View {
 					)
 			}
 		}
+    .animation(.easeInOut, value: textValue)
 	}
 }
 
@@ -85,3 +87,4 @@ struct ValidatingTextField_Previews: PreviewProvider {
 		.padding()
 	}
 }
+#endif

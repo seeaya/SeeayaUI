@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+#if os(macOS)
 @available(macOS 11.0, *)
 public struct ToolbarTabButton: View {
 	@State private var isBeingHovered = false
@@ -91,3 +92,4 @@ struct ToolbarButton_Previews: PreviewProvider {
 		.background(Color(.windowBackgroundColor))
 	}
 }
+#endif
