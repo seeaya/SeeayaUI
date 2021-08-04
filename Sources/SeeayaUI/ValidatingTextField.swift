@@ -36,40 +36,66 @@ public struct ValidatingTextField<Value: Equatable>: View {
 		_textValue = .init(initialValue: stringValue(value.wrappedValue))
 	}
 	
-	public var body: some View {
-		HStack(spacing: 6) {
-			TextField(title, text: $textValue) { _ in
-				if let validated = validate(textValue) {
-					value = validated
-				}
-			} onCommit: {
-				if let validated = validate(textValue) {
-					value = validated
-				} else {
-					textValue = stringValue(value)
-				}
-			}
-			.onChange(of: value) { newValue in
-				if let current = validate(textValue) {
-					if current == newValue {
-						// Don't change the text if validated value is the new value
-						return
-					}
-				}
-				
-				textValue = stringValue(newValue)
-			}
-			
-			if validate(textValue) == nil {
-				Image(systemName: "exclamationmark.triangle.fill")
-					.help(errorMessage(textValue) ?? "\"\(textValue)\" is an invalid value")
-					.transition(
-						.move(edge: .trailing).combined(with: .opacity)
-					)
-			}
-		}
+  public var body: some View {
+    HStack(spacing: 6) {
+      if #available(macOS 12.0, *) {
+        TextField(title, text: $textValue)
+          .onSubmit {
+            if let validated = validate(textValue) {
+              value = validated
+            } else {
+              textValue = stringValue(value)
+            }
+          }
+          .onChange(of: value) { newValue in
+            if let current = validate(textValue) {
+              if current == newValue {
+                // Don't change the text if validated value is the new value
+                return
+              }
+            }
+            
+            textValue = stringValue(newValue)
+          }
+          .onChange(of: textValue) { newTextValue in
+            if let validated = validate(newTextValue) {
+              value = validated
+            }
+          }
+      } else {
+        TextField(title, text: $textValue) { _ in
+          if let validated = validate(textValue) {
+            value = validated
+          }
+        } onCommit: {
+          if let validated = validate(textValue) {
+            value = validated
+          } else {
+            textValue = stringValue(value)
+          }
+        }
+        .onChange(of: value) { newValue in
+          if let current = validate(textValue) {
+            if current == newValue {
+              // Don't change the text if validated value is the new value
+              return
+            }
+          }
+          
+          textValue = stringValue(newValue)
+        }
+      }
+      
+      if validate(textValue) == nil {
+        Image(systemName: "exclamationmark.triangle.fill")
+          .help(errorMessage(textValue) ?? "\"\(textValue)\" is an invalid value")
+          .transition(
+            .move(edge: .trailing).combined(with: .opacity)
+          )
+      }
+    }
     .animation(.easeInOut, value: textValue)
-	}
+  }
 }
 
 // MARK: - Previews
