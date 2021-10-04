@@ -42,7 +42,7 @@ public struct ValidatingTextField<Value: Equatable>: View {
           .onSubmit {
             validateText()
           }
-          .onFocus { isFocused in
+          .focusable(true) { isFocused in
             if !isFocused {
               validateText()
             }
